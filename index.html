@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Chia-Yi Chou | Medical Informatics Portfolio</title>
+
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -44,6 +45,10 @@
       font-weight: bold;
     }
 
+    nav a:hover {
+      color: #2563eb;
+    }
+
     section {
       max-width: 900px;
       margin: 30px auto;
@@ -58,13 +63,39 @@
       padding-bottom: 8px;
     }
 
+    a {
+      color: #2563eb;
+    }
+
     .project {
       margin-bottom: 25px;
+      padding: 20px;
+      border: 1px solid #e5e7eb;
+      border-radius: 10px;
+      background-color: #fafafa;
     }
 
     .project h3 {
       margin-bottom: 5px;
       color: #374151;
+    }
+
+    .project ul {
+      margin-top: 10px;
+      padding-left: 22px;
+    }
+
+    .project li {
+      margin-bottom: 8px;
+    }
+
+    .project a {
+      color: #2563eb;
+      text-decoration: none;
+    }
+
+    .project a:hover {
+      text-decoration: underline;
     }
 
     .tag {
@@ -93,6 +124,7 @@
 
   <nav>
     <a href="#about">About</a>
+    <a href="#education">Education</a>
     <a href="#research">Research</a>
     <a href="#projects">Projects</a>
     <a href="#presentations">Presentations</a>
@@ -106,6 +138,18 @@
       My work focuses on applying artificial intelligence and clinical data analysis
       to healthcare problems, including pulmonary function testing, medical NLP,
       and retrieval-augmented generation systems for patient education.
+    </p>
+  </section>
+
+  <section id="education">
+    <h2>Education</h2>
+    <p>
+      <strong>Master of Science in Medical Informatics</strong><br>
+      Taipei Medical University
+    </p>
+    <p>
+      Background in Nursing, with research interests in medical AI, clinical NLP,
+      pulmonary function analysis, and healthcare data science.
     </p>
   </section>
 
@@ -155,11 +199,43 @@
     </div>
 
     <div class="project">
-      <h3>Medical Text Classification</h3>
+      <h3>Biomedical Text Classification — Kaggle Competition</h3>
       <p>
-        This project explores clinical text classification using TF-IDF, transformer-based
-        models, and LLM-assisted labeling strategies for medical condition classification.
+        Developed a biomedical NLP pipeline to classify medical condition descriptions
+        into five disease categories using traditional machine learning, biomedical
+        transformer models, and LLM-assisted labeling strategies.
       </p>
+
+      <ul>
+        <li>
+          Processed 12,994 training samples and 1,444 testing samples, including
+          label encoding, class distribution analysis, token-length analysis, and
+          train-test overlap investigation.
+        </li>
+        <li>
+          Benchmarked TF-IDF-based models including Naïve Bayes, Logistic Regression,
+          SVM, Decision Tree, and KNN.
+        </li>
+        <li>
+          Fine-tuned PubMedBERT and BioLinkBERT-large for biomedical text classification
+          using 5-fold cross-validation.
+        </li>
+        <li>
+          Applied ensemble learning, overlap-aware post-processing, and uncertainty-based
+          relabeling to improve performance on noisy medical labels.
+        </li>
+        <li>
+          Achieved a best public leaderboard score of <strong>0.71760</strong> using a
+          five-model BioLinkBERT-large ensemble.
+        </li>
+      </ul>
+
+      <span class="tag">Biomedical NLP</span>
+      <span class="tag">PubMedBERT</span>
+      <span class="tag">BioLinkBERT</span>
+      <span class="tag">TF-IDF</span>
+      <span class="tag">Ensemble Learning</span>
+      <span class="tag">Kaggle</span>
     </div>
   </section>
 
@@ -182,9 +258,9 @@
 
   <section id="contact">
     <h2>Contact</h2>
-    <p>Email: m610113002@tmu.edu.tw</p>
-    <p>GitHub: https://github.com/juliachou0530</p>
-    <p>LinkedIn: Optional</p>
+    <p>Email: <a href="mailto:m610113002@tmu.edu.tw">m610113002@tmu.edu.tw</a></p>
+    <p>GitHub: <a href="https://github.com/juliachou0530" target="_blank">github.com/juliachou0530</a></p>
+    <p>Kaggle: <a href="https://www.kaggle.com/juliachoutmu" target="_blank">kaggle.com/juliachoutmu</a></p>
   </section>
 
   <footer>
