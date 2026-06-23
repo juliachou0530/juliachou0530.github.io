@@ -473,27 +473,31 @@
     <!-- RAG Chatbot -->
     <div class="project">
       <div class="project-header">
-        <h3>TMUH CareGuide AI: RAG-Based Patient Education Chatbot</h3>
+        <h3>Personalized Patient Education System — Agentic RAG + Multi-LLM</h3>
         <span class="badge">NLP & LLM Course</span>
       </div>
       <div class="project-meta">
         <div class="meta-block">
-          <p class="meta-label">Problem</p>
-          <p>Generic health education materials fail to address individual patient needs, limiting comprehension and engagement.</p>
-        </div>
-        <div class="meta-block">
           <p class="meta-label">Approach</p>
-          <p>Vector database built from 225 hospital education documents. Patient context retrieved from MIMIC-IV EHR data. Local LLM deployment via Ollama for data privacy compliance.</p>
+          <p>7-stage agentic pipeline: retrieval agent → relevance verification agent → coverage assessment → grounded generation. RAG-only constraint prevents hallucinated medical advice.</p>
         </div>
         <div class="meta-block">
-          <p class="meta-label">Evaluation</p>
-          <span class="stat">225</span>
-          <span class="stat-label">Documents indexed · Top-5 recommendations reviewed by clinical nurses</span>
+          <p class="meta-label">Data</p>
+          <p>225 hospital-approved leaflets as knowledge base. MIMIC-IV EHR for patient clinical profiles (ICD-10 + prescriptions). Local LLM deployment for privacy compliance.</p>
         </div>
         <div class="meta-block">
-          <p class="meta-label">Impact</p>
-          <p>Planned deployment in hospital ward. Scales personalised education across departments with minimal added workload.</p>
+          <p class="meta-label">Retrieval Recall</p>
+          <span class="stat">80.9%</span>
+          <span class="stat-label">Avg. across 10 cases · Citation accuracy 7/10</span>
         </div>
+        <div class="meta-block">
+          <p class="meta-label">Human Evaluation</p>
+          <span class="stat">4.7 / 5</span>
+          <span class="stat-label">Readability · Personalisation 4.2 · Clinical Utility 4.3</span>
+        </div>
+      </div>
+      <div style="margin-top:16px;">
+        <a href="project-rag-education.html" style="font-size:13px; color:var(--accent); font-weight:500; text-decoration:none; border:1px solid #c2d9e8; background:var(--accent-soft); padding:6px 14px; border-radius:6px; display:inline-block;">View Full Project Details →</a>
       </div>
     </div>
 
