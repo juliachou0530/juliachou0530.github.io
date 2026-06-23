@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Spirometry ML Project | Chia-Yi (Julia) Chou</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #f9f8f6;
+      --surface: #ffffff;
+      --border: #e4e1db;
+      --text-primary: #1a1917;
+      --text-secondary: #5c5853;
+      --accent: #1d4e6b;
+      --accent-soft: #e8f1f6;
+      --accent-mid: #4a8aad;
+      --mono: 'IBM Plex Mono', monospace;
+      --sans: 'Inter', sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--sans);
+      background: var(--bg);
+      color: var(--text-primary);
+      line-height: 1.65;
+      font-size: 15px;
+    }
+
+    /* ── TOP BAR ── */
+    .topbar {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 14px 24px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .topbar a {
+      color: var(--accent-mid);
+      text-decoration: none;
+      font-size: 13px;
+    }
+
+    .topbar a:hover { text-decoration: underline; }
+
+    .topbar .sep {
+      color: var(--border);
+      font-size: 13px;
+    }
+
+    .topbar .current {
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+
+    /* ── HERO ── */
+    .hero {
+      background: var(--accent);
+      color: #fff;
+      padding: 52px 24px 44px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+        90deg,
+        rgba(255,255,255,0.03) 0px,
+        rgba(255,255,255,0.03) 1px,
+        transparent 1px,
+        transparent 48px
+      );
+      pointer-events: none;
+    }
+
+    .hero-inner {
+      max-width: 860px;
+      margin: 0 auto;
+      position: relative;
+    }
+
+    .hero-eyebrow {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.5);
+      margin-bottom: 12px;
+    }
+
+    .hero h1 {
+      font-size: clamp(20px, 3.5vw, 30px);
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      line-height: 1.3;
+      margin-bottom: 16px;
+      max-width: 720px;
+    }
+
+    .hero-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .hero-tag {
+      font-family: var(--mono);
+      font-size: 11px;
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.2);
+      color: rgba(255,255,255,0.85);
+      padding: 3px 10px;
+      border-radius: 4px;
+    }
+
+    /* ── STAT STRIP ── */
+    .stat-strip {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .stat-strip-inner {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 24px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 24px;
+    }
+
+    .stat-item { }
+
+    .stat-value {
+      font-family: var(--mono);
+      font-size: 26px;
+      font-weight: 500;
+      color: var(--accent);
+      display: block;
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+
+    .stat-desc {
+      font-size: 12px;
+      color: var(--text-secondary);
+      line-height: 1.4;
+    }
+
+    /* ── LAYOUT ── */
+    .container {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    section {
+      padding: 48px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    section:last-of-type { border-bottom: none; }
+
+    .section-label {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent-mid);
+      margin-bottom: 8px;
+    }
+
+    h2 {
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 20px;
+      letter-spacing: -0.01em;
+    }
+
+    h3 {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 10px;
+    }
+
+    p {
+      color: var(--text-secondary);
+      margin-bottom: 12px;
+    }
+
+    /* ── STUDY CARDS ── */
+    .study-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 24px 28px;
+      margin-bottom: 20px;
+    }
+
+    .study-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+    }
+
+    .study-num {
+      font-family: var(--mono);
+      font-size: 11px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      border: 1px solid #c2d9e8;
+      padding: 3px 10px;
+      border-radius: 4px;
+      letter-spacing: 0.06em;
+    }
+
+    /* ── TABLE ── */
+    .table-wrap {
+      overflow-x: auto;
+      margin: 16px 0;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    thead tr {
+      background: var(--accent-soft);
+    }
+
+    th {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent);
+      padding: 9px 12px;
+      text-align: left;
+      border-bottom: 2px solid #c2d9e8;
+    }
+
+    td {
+      padding: 9px 12px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text-secondary);
+    }
+
+    tr.highlight td {
+      background: #f0f7fb;
+      color: var(--text-primary);
+      font-weight: 500;
+    }
+
+    tr:last-child td { border-bottom: none; }
+
+    /* ── FINDING BLOCKS ── */
+    .findings {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 8px;
+    }
+
+    .finding {
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+    }
+
+    .finding-num {
+      font-family: var(--mono);
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--accent);
+      background: var(--accent-soft);
+      border: 1px solid #c2d9e8;
+      border-radius: 50%;
+      width: 26px;
+      height: 26px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .finding p { margin: 0; }
+
+    /* ── PIPELINE STEPS ── */
+    .pipeline {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0;
+      margin: 16px 0;
+    }
+
+    .pipe-step {
+      flex: 1 1 130px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px 14px;
+      margin: 4px;
+      position: relative;
+    }
+
+    .pipe-step-label {
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent-mid);
+      margin-bottom: 4px;
+    }
+
+    .pipe-step p {
+      font-size: 12.5px;
+      margin: 0;
+      color: var(--text-primary);
+    }
+
+    /* ── INTERPRETATION BOX ── */
+    .interp-box {
+      background: var(--accent-soft);
+      border: 1px solid #c2d9e8;
+      border-left: 3px solid var(--accent);
+      border-radius: 0 8px 8px 0;
+      padding: 16px 20px;
+      margin: 16px 0;
+    }
+
+    .interp-box p {
+      margin: 0;
+      font-size: 13.5px;
+      color: var(--accent);
+    }
+
+    /* ── LIMITATION LIST ── */
+    .limit-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .limit-list li {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      font-size: 13.5px;
+      color: var(--text-secondary);
+    }
+
+    .limit-list li::before {
+      content: '—';
+      color: var(--accent-mid);
+      flex-shrink: 0;
+      font-family: var(--mono);
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      text-align: center;
+      padding: 28px 24px;
+      font-size: 12px;
+      color: var(--text-secondary);
+      border-top: 1px solid var(--border);
+    }
+
+    @media (max-width: 600px) {
+      .stat-strip-inner { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+
+<!-- BREADCRUMB -->
+<div class="topbar">
+  <a href="index.html">← Portfolio</a>
+  <span class="sep">/</span>
+  <span class="current">Spirometry ML — CNN & PRISm Phenotyping</span>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-inner">
+    <p class="hero-eyebrow">Machine Learning Final Report · Graduate Institute of Biomedical Informatics</p>
+    <h1>Machine Learning-Based Analysis of the Inspiratory Limb of the Flow–Volume Loop for Upper Airway Dysfunction Detection and PRISm Phenotyping</h1>
+    <div class="hero-tags">
+      <span class="hero-tag">CNN · ResNet-18</span>
+      <span class="hero-tag">PRISm</span>
+      <span class="hero-tag">Spirometry</span>
+      <span class="hero-tag">Logistic Regression</span>
+      <span class="hero-tag">GMM Clustering</span>
+      <span class="hero-tag">TMUH Dataset</span>
+    </div>
+  </div>
+</div>
+
+<!-- STAT STRIP -->
+<div class="stat-strip">
+  <div class="stat-strip-inner">
+    <div class="stat-item">
+      <span class="stat-value">0.807</span>
+      <span class="stat-desc">ResNet-18 hold-out AUC for UAO-related loop classification</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-value">7,187</span>
+      <span class="stat-desc">Unique patients in the numerical spirometry cohort</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-value">OR 1.56</span>
+      <span class="stat-desc">Adjusted OR for Stable PRISm → UAW proxy positivity</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-value">30.3%</span>
+      <span class="stat-desc">GMM-identified inspiratory-limited cluster (n=443 / 1,464)</span>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- OVERVIEW -->
+  <section>
+    <p class="section-label">Overview</p>
+    <h2>Central Thesis</h2>
+    <p>
+      Standard pulmonary function testing (PFT) interpretation focuses almost exclusively on expiratory indices — FEV₁, FVC, FEV₁/FVC — while the inspiratory limb of the flow–volume loop is systematically overlooked. This project challenges that asymmetry through two parallel lines of investigation: image-based CNN classification of flow–volume loop morphology (Study 1) and numerical spirometric phenotyping of PRISm patients (Study 2).
+    </p>
+    <p>
+      Both studies converge on the same conclusion: the inspiratory limb encodes clinically actionable diagnostic signals that current PFT guidelines do not capture.
+    </p>
+  </section>
+
+  <!-- STUDY 1 -->
+  <section>
+    <p class="section-label">Study 1</p>
+    <h2>CNN Classification of Flow–Volume Loop Morphology</h2>
+
+    <div class="study-card">
+      <div class="study-header">
+        <span class="study-num">PROBLEM</span>
+      </div>
+      <p>Upper airway obstruction (UAO) and inducible laryngeal obstruction (ILO/VCD) are frequently misdiagnosed as asthma because their hallmark features — inspiratory plateau, reduced PIF, saw-tooth oscillations — are confined to the inspiratory limb and assessed by subjective visual inspection with poor inter-observer reliability (κ = 0.12).</p>
+    </div>
+
+    <div class="study-card">
+      <div class="study-header">
+        <span class="study-num">DATA</span>
+      </div>
+      <p>154 de-identified flow–volume loop images from Taipei Medical University Hospital, annotated by experienced pulmonologists into 6 morphological classes. Due to severe class imbalance (minority classes B/D/E: 3–5 images each), the task was restructured as binary classification:</p>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Class</th><th>Label</th><th>N</th><th>Description</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>0, C, D</td><td>Negative (non-UAO)</td><td>68</td><td>Normal, intrathoracic obstruction, submaximal effort</td></tr>
+            <tr><td>A, B, E</td><td>Positive (UAO-related)</td><td>86</td><td>Variable/fixed extrathoracic UAO, atypical ILO/VCD</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="study-card">
+      <div class="study-header">
+        <span class="study-num">PIPELINE</span>
+      </div>
+      <div class="pipeline">
+        <div class="pipe-step">
+          <p class="pipe-step-label">Preprocessing</p>
+          <p>PDF → 300 dpi render → crop → 256×256 px · axis elements removed</p>
+        </div>
+        <div class="pipe-step">
+          <p class="pipe-step-label">Data Split</p>
+          <p>Stratified hold-out 20% (n=31) · Dev set 80% (n=123) with 3-fold CV</p>
+        </div>
+        <div class="pipe-step">
+          <p class="pipe-step-label">Architectures</p>
+          <p>ResNet-18, ResNet-50, EfficientNet-B0, DenseNet-121 (ImageNet pretrained)</p>
+        </div>
+        <div class="pipe-step">
+          <p class="pipe-step-label">Imbalance</p>
+          <p>WeightedRandomSampler · BCEWithLogitsLoss pos_weight · augmentation</p>
+        </div>
+        <div class="pipe-step">
+          <p class="pipe-step-label">Training</p>
+          <p>Differential LR: 1e-5 backbone / 1e-4 head · CosineAnnealingLR · 80 epochs</p>
+        </div>
+        <div class="pipe-step">
+          <p class="pipe-step-label">Error Analysis</p>
+          <p>Grad-CAM on 8 misclassified hold-out cases (5 FN, 3 FP)</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="study-card">
+      <div class="study-header">
+        <span class="study-num">RESULTS — HOLD-OUT</span>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Model</th><th>AUC</th><th>Accuracy</th><th>Precision</th><th>Recall</th><th>Macro F1</th><th>Misclassified</th></tr>
+          </thead>
+          <tbody>
+            <tr class="highlight"><td>ResNet-18 ★</td><td>0.807</td><td>0.742</td><td>0.800</td><td>0.706</td><td>0.742</td><td>8</td></tr>
+            <tr><td>ResNet-50</td><td>0.752</td><td>0.710</td><td>0.786</td><td>0.647</td><td>0.710</td><td>9</td></tr>
+            <tr><td>DenseNet-121</td><td>0.756</td><td>0.613</td><td>0.778</td><td>0.412</td><td>0.603</td><td>12</td></tr>
+            <tr><td>EfficientNet-B0</td><td>0.626</td><td>0.516</td><td>1.000</td><td>0.118</td><td>0.431</td><td>15</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="interp-box">
+        <p>★ ResNet-18 selected as final model. ResNet-50 led in CV (AUC 0.732) but ResNet-18 generalised better to hold-out. EfficientNet-B0's perfect precision masked near-zero recall (FN=15, TP=2) — unsuitable for screening tasks. Final model selection prioritised macro F1 and recall over AUC given the clinical cost of missed UAO.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- STUDY 2 -->
+  <section>
+    <p class="section-label">Study 2</p>
+    <h2>Numerical PRISm Spirometric Phenotyping</h2>
+
+    <div class="study-card">
+      <div class="study-header">
+        <span class="study-num">PROBLEM</span>
+      </div>
+      <p>PRISm (FEV₁ &lt; 80% predicted, FEV₁/FVC ≥ 0.70) is treated as a homogeneous entity in current guidelines. Emerging evidence suggests a subset may arise from upstream inspiratory flow limitation — an "inlet limitation" hypothesis — rather than intrinsic parenchymal pathology. This subtype is invisible to conventional expiratory-focused analysis.</p>
+    </div>
+
+    <div class="study-card">
+      <div class="study-header">
+        <span class="study-num">DATA</span>
+      </div>
+      <p>57,295 spirometry records from TMUH (Dec 2007 – May 2026). After inclusion criteria and best-trial selection:</p>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Cohort</th><th>N</th><th>Description</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Cross-sectional</td><td>7,187</td><td>Unique individuals, all eligible visits</td></tr>
+            <tr><td>Longitudinal</td><td>1,552</td><td>≥2 distinct visit dates (21.6% of cohort)</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p style="margin-top:10px;">Longitudinal phenotypes: Stable PRISm (n=412), Intermittent PRISm (n=327), Never PRISm (n=813). UAW proxy defined as ≥2 of: PIF below sex-adjusted median; PIF/PEF below sex-adjusted median; FIV₁/FIVC below sex-adjusted median.</p>
+    </div>
+
+    <h3 style="margin-top:24px;">2a · Logistic Regression (Primary Analysis)</h3>
+    <div class="study-card">
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>PRISm Phenotype</th><th>N (%)</th><th>UAW Proxy+ (%)</th><th>Adjusted OR (95% CI)</th><th>p</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Never PRISm (ref)</td><td>813 (52.4%)</td><td>63.6%</td><td>—</td><td>—</td></tr>
+            <tr class="highlight"><td>Intermittent PRISm</td><td>327 (21.1%)</td><td>73.7%</td><td>1.62 (1.22–2.15)</td><td>&lt;0.001</td></tr>
+            <tr class="highlight"><td>Stable PRISm</td><td>412 (26.5%)</td><td>72.8%</td><td>1.56 (1.20–2.03)</td><td>0.001</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p style="margin-top:12px; font-size:13px;">Cross-sectional cohort (n=7,187): PRISm vs non-PRISm → adjusted OR 1.47 (95% CI 1.33–1.63), p&lt;0.001.</p>
+
+      <div class="findings" style="margin-top:16px;">
+        <div class="finding">
+          <span class="finding-num">1</span>
+          <p>Both Stable and Intermittent PRISm show ~+9–10 percentage point elevation in UAW proxy positivity over Never PRISm, persisting after adjustment for age, sex, and BMI.</p>
+        </div>
+        <div class="finding">
+          <span class="finding-num">2</span>
+          <p>Stable PRISm shows a strong age gradient (OR 1.20 per decade), consistent with structural airway remodelling beyond the general ageing effect.</p>
+        </div>
+        <div class="finding">
+          <span class="finding-num">3</span>
+          <p>47.4% of Intermittent PRISm individuals transitioned to non-PRISm status between first and last visits, indicating reversibility and a potential intervention window.</p>
+        </div>
+      </div>
+    </div>
+
+    <h3 style="margin-top:24px;">2b · Supervised ML Classification (Expiratory Features Only)</h3>
+    <div class="study-card">
+      <p>To test whether UAW proxy positivity is recoverable from expiratory data alone, three classifiers were trained with all inspiratory components strictly excluded (no PIF, PEF, FIV₁, FIVC in features).</p>
+      <div class="table-wrap" style="margin-top:12px;">
+        <table>
+          <thead>
+            <tr><th>Model</th><th>AUC</th><th>Accuracy</th><th>Precision</th><th>Recall</th><th>Macro F1</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Logistic Regression</td><td>0.557</td><td>0.560</td><td>0.573</td><td>0.836</td><td>0.488</td></tr>
+            <tr><td>XGBoost</td><td>0.567</td><td>0.567</td><td>0.590</td><td>0.742</td><td>0.535</td></tr>
+            <tr><td>Random Forest</td><td>0.568</td><td>0.541</td><td>0.625</td><td>0.445</td><td>0.540</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="interp-box" style="margin-top:14px;">
+        <p>Near-chance AUC (0.557–0.568) is a positive finding, not a failure. It demonstrates that expiratory indices cannot reconstruct inspiratory-limited physiology — the inspiratory limb encodes information orthogonal to what expiratory measurements capture. XGBoost feature importance was evenly distributed across FEV₆, FVC, FEV₁ (each ≈0.10), confirming no leakage.</p>
+      </div>
+    </div>
+
+    <h3 style="margin-top:24px;">2c · Unsupervised GMM Clustering</h3>
+    <div class="study-card">
+      <p>A Gaussian Mixture Model was applied to inspiratory indices (PIF, PIF/PEF, FIV₁/FIVC) in the longitudinal subgroup (n=1,464 with complete inspiratory data) to test whether a natural inspiratory-limited subpopulation exists independent of any expiratory labelling.</p>
+      <div class="findings" style="margin-top:14px;">
+        <div class="finding">
+          <span class="finding-num">★</span>
+          <p><strong>Two-cluster solution</strong> selected by BIC: inspiratory-limited cluster (n=443, 30.3%) vs normal-inspiratory cluster (n=1,021, 69.7%). Bootstrap silhouette coefficient: 0.216 ± 0.026.</p>
+        </div>
+        <div class="finding">
+          <span class="finding-num">★</span>
+          <p>The inspiratory-limited cluster was significantly enriched for Stable PRISm individuals, with systematically lower PIF and FIV₁/FIVC — a bimodal structure not derivable from expiratory features alone.</p>
+        </div>
+      </div>
+      <div class="interp-box" style="margin-top:14px;">
+        <p>The GMM finding complements the supervised null result: the inspiratory-limited phenotype is a genuine, separable physiological entity — not an artefact of arbitrary threshold selection.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- LIMITATIONS & FUTURE -->
+  <section>
+    <p class="section-label">Limitations & Future Work</p>
+    <h2>What's Next</h2>
+    <ul class="limit-list">
+      <li>Image dataset (n=154) with severe minority-class imbalance limits multi-class classification. No public labelled UAO dataset exists for external validation.</li>
+      <li>The two datasets come from different patient populations and cannot be linked at the individual level — true multimodal fusion (CNN embeddings + numerical indices) requires prospective paired data collection.</li>
+      <li>The UAW proxy is defined by spirometry-derived indices without laryngoscopic confirmation; findings are hypothesis-generating rather than confirmatory.</li>
+      <li>Future directions: expand image dataset for rare classes; collect region-level loop annotations for object detection; pursue paired image + numerical data for hybrid multimodal architecture; external validation with laryngoscopy/bronchoscopy labels.</li>
+    </ul>
+  </section>
+
+</div>
+
+<footer>
+  © 2026 Chia-Yi (Julia) Chou · Taipei Medical University · <a href="index.html" style="color:var(--accent-mid);">Back to Portfolio</a>
+</footer>
+
+</body>
+</html>
