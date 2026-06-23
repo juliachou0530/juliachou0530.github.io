@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Patient Education AI System | Chia-Yi (Julia) Chou</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:#f9f8f6;--surface:#fff;--border:#e4e1db;--text-primary:#1a1917;--text-secondary:#5c5853;
+      --accent:#1d4e6b;--accent-soft:#e8f1f6;--accent-mid:#4a8aad;
+      --sys-a:#166534;--sys-a-soft:#f0fdf4;--sys-a-border:#86efac;
+      --warn:#92400e;--warn-soft:#fef3c7;--warn-border:#fcd34d;
+      --mono:'IBM Plex Mono',monospace;--sans:'Inter',sans-serif;
+    }
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:var(--sans);background:var(--bg);color:var(--text-primary);line-height:1.65;font-size:15px;}
+    .topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:14px 24px;display:flex;align-items:center;gap:8px;}
+    .topbar a{color:var(--accent-mid);text-decoration:none;font-size:13px;}
+    .topbar a:hover{text-decoration:underline;}
+    .topbar .sep{color:var(--border);font-size:13px;}
+    .topbar .current{font-size:13px;color:var(--text-secondary);}
+
+    .hero{background:var(--accent);color:#fff;padding:52px 24px 44px;position:relative;overflow:hidden;}
+    .hero::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(90deg,rgba(255,255,255,.03) 0px,rgba(255,255,255,.03) 1px,transparent 1px,transparent 48px);pointer-events:none;}
+    .hero-inner{max-width:860px;margin:0 auto;position:relative;}
+    .hero-eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:12px;}
+    .hero h1{font-size:clamp(20px,3.5vw,30px);font-weight:600;letter-spacing:-.02em;line-height:1.3;margin-bottom:16px;max-width:740px;}
+    .hero-tags{display:flex;flex-wrap:wrap;gap:8px;}
+    .hero-tag{font-family:var(--mono);font-size:11px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.85);padding:3px 10px;border-radius:4px;}
+
+    .sys-nav{background:var(--surface);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;overflow-x:auto;}
+    .sys-nav-inner{max-width:860px;margin:0 auto;padding:0 24px;display:flex;}
+    .sys-tab{padding:14px 16px;font-size:13px;font-weight:500;color:var(--text-secondary);border-bottom:2px solid transparent;white-space:nowrap;text-decoration:none;display:inline-block;transition:color .15s,border-color .15s;}
+    .sys-tab:hover{color:var(--accent);}
+    .tab-a{color:var(--sys-a);border-bottom-color:var(--sys-a);}
+    .tab-b{color:var(--accent);border-bottom-color:var(--accent);}
+
+    .stat-strip{background:var(--surface);border-bottom:1px solid var(--border);}
+    .stat-strip-inner{max-width:860px;margin:0 auto;padding:24px;display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:24px;}
+    .stat-value{font-family:var(--mono);font-size:26px;font-weight:500;color:var(--accent);display:block;line-height:1;margin-bottom:4px;}
+    .stat-desc{font-size:12px;color:var(--text-secondary);line-height:1.4;}
+
+    .container{max-width:860px;margin:0 auto;padding:0 24px;}
+    section{padding:48px 0;border-bottom:1px solid var(--border);}
+    section:last-of-type{border-bottom:none;}
+    .section-label{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent-mid);margin-bottom:8px;}
+    h2{font-size:20px;font-weight:600;color:var(--text-primary);margin-bottom:20px;letter-spacing:-.01em;}
+    h3{font-size:15px;font-weight:600;color:var(--text-primary);margin-bottom:10px;}
+    p{color:var(--text-secondary);margin-bottom:12px;}
+
+    .sys-badge-a{font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.08em;background:var(--sys-a-soft);color:var(--sys-a);border:1px solid var(--sys-a-border);padding:4px 12px;border-radius:4px;display:inline-block;margin-bottom:14px;}
+    .sys-badge-b{font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.08em;background:var(--accent-soft);color:var(--accent);border:1px solid #93c5fd;padding:4px 12px;border-radius:4px;display:inline-block;margin-bottom:14px;}
+    .sys-block-a{border-left:3px solid var(--sys-a-border);padding-left:20px;}
+    .sys-block-b{border-left:3px solid #93c5fd;padding-left:20px;}
+
+    .card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:22px 26px;margin-bottom:16px;}
+    .card-label{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent-mid);margin-bottom:8px;}
+
+    .feature-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-top:14px;}
+    .feat{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:16px 18px;}
+    .feat .card-label{margin-bottom:6px;}
+    .feat p{font-size:13px;margin:0;}
+
+    .pipeline{display:flex;flex-direction:column;}
+    .pipe-step{display:flex;gap:16px;align-items:flex-start;padding:14px 0;border-bottom:1px solid var(--border);}
+    .pipe-step:last-child{border-bottom:none;}
+    .pipe-num{font-family:var(--mono);font-size:11px;font-weight:500;color:var(--accent);background:var(--accent-soft);border:1px solid #c2d9e8;border-radius:4px;padding:2px 8px;white-space:nowrap;flex-shrink:0;margin-top:2px;}
+    .pipe-content h4{font-size:14px;font-weight:600;color:var(--text-primary);margin-bottom:3px;}
+    .pipe-content p{font-size:13px;margin:0;}
+
+    .eval-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(185px,1fr));gap:14px;margin-top:8px;}
+    .eval-item{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:16px 18px;}
+    .eval-label{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent-mid);margin-bottom:6px;}
+    .eval-row{display:flex;align-items:baseline;gap:8px;margin-bottom:4px;}
+    .eval-actual{font-family:var(--mono);font-size:22px;font-weight:500;}
+    .eval-target{font-size:11px;color:var(--text-secondary);}
+    .eval-note{font-size:12px;color:var(--text-secondary);margin:0;}
+    .pass .eval-actual{color:#166534;}.pass{border-left:3px solid #86efac;}
+    .fail .eval-actual{color:#9a3412;}.fail{border-left:3px solid #fca5a5;}
+    .near .eval-actual{color:#92400e;}.near{border-left:3px solid #fcd34d;}
+
+    .interp-box{background:var(--accent-soft);border:1px solid #c2d9e8;border-left:3px solid var(--accent);border-radius:0 8px 8px 0;padding:14px 18px;margin:14px 0;}
+    .interp-box p{font-size:13.5px;color:var(--accent);margin:0;}
+    .warn-box{background:var(--warn-soft);border:1px solid var(--warn-border);border-left:3px solid #f59e0b;border-radius:0 8px 8px 0;padding:14px 18px;margin:14px 0;}
+    .warn-box p{font-size:13.5px;color:var(--warn);margin:0;}
+
+    .table-wrap{overflow-x:auto;margin:14px 0;}
+    table{width:100%;border-collapse:collapse;font-size:13px;}
+    thead tr{background:var(--accent-soft);}
+    th{font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);padding:9px 12px;text-align:left;border-bottom:2px solid #c2d9e8;}
+    td{padding:9px 12px;border-bottom:1px solid var(--border);color:var(--text-secondary);}
+    tr:last-child td{border-bottom:none;}
+    .compare-table tr td:first-child{font-weight:500;color:var(--text-primary);white-space:nowrap;}
+
+    .future-list{list-style:none;display:flex;flex-direction:column;gap:10px;}
+    .future-list li{display:flex;gap:10px;align-items:flex-start;font-size:13.5px;color:var(--text-secondary);}
+    .future-list li::before{content:'→';color:var(--accent-mid);flex-shrink:0;font-family:var(--mono);}
+
+    .live-btn{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:var(--sys-a);font-weight:500;text-decoration:none;border:1px solid var(--sys-a-border);background:var(--sys-a-soft);padding:7px 16px;border-radius:6px;margin-top:4px;}
+    .live-btn:hover{background:#dcfce7;}
+
+    footer{text-align:center;padding:28px 24px;font-size:12px;color:var(--text-secondary);border-top:1px solid var(--border);}
+    @media(max-width:600px){.stat-strip-inner{grid-template-columns:repeat(2,1fr);}
+    .sys-block-a,.sys-block-b{padding-left:12px;}}
+  </style>
+</head>
+<body>
+
+<div class="topbar">
+  <a href="index.html">← Portfolio</a>
+  <span class="sep">/</span>
+  <span class="current">Patient Education AI — Two-System Architecture</span>
+</div>
+
+<div class="hero">
+  <div class="hero-inner">
+    <p class="hero-eyebrow">NLP & LLM · Hospital Deployment · Graduate Institute of Biomedical Informatics</p>
+    <h1>AI-Powered Patient Health Education System</h1>
+    <div class="hero-tags">
+      <span class="hero-tag">Agentic RAG</span>
+      <span class="hero-tag">Multi-LLM</span>
+      <span class="hero-tag">MIMIC-IV EHR</span>
+      <span class="hero-tag">210+ Clinical Leaflets</span>
+      <span class="hero-tag">Firebase · Vertex AI</span>
+      <span class="hero-tag">Anti-Hallucination</span>
+      <span class="hero-tag">Ollama Local Deploy</span>
+    </div>
+  </div>
+</div>
+
+<nav class="sys-nav">
+  <div class="sys-nav-inner">
+    <a href="#overview" class="sys-tab">Overview</a>
+    <a href="#system-a" class="sys-tab tab-a">System A · Public Portal</a>
+    <a href="#system-b" class="sys-tab tab-b">System B · Personalised Generation</a>
+    <a href="#evaluation" class="sys-tab">Evaluation</a>
+    <a href="#future" class="sys-tab">Future</a>
+  </div>
+</nav>
+
+<div class="stat-strip">
+  <div class="stat-strip-inner">
+    <div><span class="stat-value">210+</span><span class="stat-desc">Hospital-approved leaflets in shared knowledge base</span></div>
+    <div><span class="stat-value">Live</span><span class="stat-desc">System A deployed on Firebase · publicly accessible</span></div>
+    <div><span class="stat-value">80.9%</span><span class="stat-desc">Retrieval recall across 10 evaluated cases (System B)</span></div>
+    <div><span class="stat-value">4.7 / 5</span><span class="stat-desc">Readability in human evaluation (System B)</span></div>
+  </div>
+</div>
+
+<div class="container">
+
+  <section id="overview">
+    <p class="section-label">Overview</p>
+    <h2>One Problem, Two Entry Points</h2>
+    <p>Clinical patient education fails in two distinct places: at the bedside, where generic leaflets don't fit the individual patient's diagnoses and medications; and after discharge, where patients forget what nurses explained and have no easy way to look it up. This project builds one shared knowledge base and two systems that serve each gap.</p>
+    <div class="table-wrap" style="margin-top:20px;">
+      <table class="compare-table">
+        <thead>
+          <tr><th></th><th>System A · Public Portal</th><th>System B · Personalised Generation</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>User</td><td>Patients &amp; families (self-service)</td><td>Clinical team (EHR-driven)</td></tr>
+          <tr><td>Input</td><td>Free-text question in natural language</td><td>Patient EHR — ICD-10 diagnoses + prescriptions</td></tr>
+          <tr><td>Output</td><td>Relevant education content with source citation</td><td>Personalised PDF/Word report, per-claim citations</td></tr>
+          <tr><td>Deployment</td><td>Firebase · publicly live</td><td>Local LLM (Ollama) · privacy-compliant</td></tr>
+          <tr><td>Personal data</td><td>Not required — anonymous query</td><td>Uses EHR internally, no PII in output</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section id="system-a">
+    <span class="sys-badge-a">System A · Public Portal</span>
+    <h2>北醫衛教小幫手 — Patient-Facing Query Portal</h2>
+    <div class="sys-block-a">
+      <p>A publicly deployed web application that lets patients and families query hospital-approved education content after discharge — no login, no personal data needed. Designed for the moment a patient gets home and can't remember what the nurse said.</p>
+      <a class="live-btn" href="https://artificial-intelligence-theory.web.app/" target="_blank">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+        View Live Site
+      </a>
+      <div class="feature-grid">
+        <div class="feat">
+          <p class="card-label">Knowledge Base</p>
+          <p>210+ hospital-approved leaflets — chronic disease, wound care, maternal health, paediatrics, oncology, post-discharge instructions.</p>
+        </div>
+        <div class="feat">
+          <p class="card-label">Query Interface</p>
+          <p>Natural language input in Mandarin. Supports voice input (國語/台語) for accessibility. No personal data required at any step.</p>
+        </div>
+        <div class="feat">
+          <p class="card-label">Grounded Answers</p>
+          <p>Every response cites the source leaflet. Powered by Vertex AI RAG — no free-form generation without document grounding.</p>
+        </div>
+        <div class="feat">
+          <p class="card-label">Knowledge Gap Loop</p>
+          <p>When the system can't answer, users submit the question topic — logged as a knowledge base expansion queue for clinical team review.</p>
+        </div>
+        <div class="feat">
+          <p class="card-label">Video Integration</p>
+          <p>Links to TMUH YouTube health education channels for topics where video is more effective (injection technique, physical therapy).</p>
+        </div>
+        <div class="feat">
+          <p class="card-label">Privacy by Design</p>
+          <p>No login, no name, no patient ID required. Anonymous query throughout — safe for post-discharge public access.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="system-b">
+    <span class="sys-badge-b">System B · Personalised Generation</span>
+    <h2>Agentic RAG Pipeline — EHR-Driven Education Reports</h2>
+    <div class="sys-block-b">
+      <p>A clinical-facing multi-agent pipeline that reads a patient's EHR, identifies relevant education needs, and generates a personalised citation-grounded report — using only hospital-approved documents, never free-form LLM knowledge.</p>
+      <div class="card" style="margin-top:18px;">
+        <p class="card-label">7-Stage Pipeline</p>
+        <div class="pipeline">
+          <div class="pipe-step"><span class="pipe-num">Stage 0</span><div class="pipe-content"><h4>Knowledge Base Preparation</h4><p>Chunk and standardise 225 leaflets into a structured, searchable clinical knowledge base.</p></div></div>
+          <div class="pipe-step"><span class="pipe-num">Stage 1</span><div class="pipe-content"><h4>Clinical Feature Extraction</h4><p>Extract ICD-10 diagnoses and prescriptions from MIMIC-IV EHR per patient.</p></div></div>
+          <div class="pipe-step"><span class="pipe-num">Stage 2</span><div class="pipe-content"><h4>Candidate Retrieval Agent</h4><p>LLM agent selects candidate leaflets using diagnoses, prescriptions, and semantic clinical reasoning — not fixed top-K similarity.</p></div></div>
+          <div class="pipe-step"><span class="pipe-num">Stage 3</span><div class="pipe-content"><h4>Relevance Verification Agent</h4><p>Second agent evaluates clinical relevance and coverage completeness — checks whether comorbidity-specific content is actually present, not just keyword-matched.</p></div></div>
+          <div class="pipe-step"><span class="pipe-num">Stage 4</span><div class="pipe-content"><h4>Coverage Assessment &amp; Extended Search</h4><p>Detects unmet educational needs and performs targeted additional retrieval for uncovered comorbidities or medications.</p></div></div>
+          <div class="pipe-step"><span class="pipe-num">Stage 5</span><div class="pipe-content"><h4>Grounded Multi-LLM Generation</h4><p>Master generation agent produces citation-grounded personalised summaries from verified leaflets only. RAG-only constraint active throughout.</p></div></div>
+          <div class="pipe-step"><span class="pipe-num">Stage 6</span><div class="pipe-content"><h4>Report Output</h4><p>Structured PDF / Word report with per-claim traceable citations and explicit tracking of unresolved questions for clinician review.</p></div></div>
+        </div>
+      </div>
+      <div class="interp-box">
+        <p>Key design choice: multi-agent verification replaces fixed top-K retrieval. Each agent has a distinct role — retrieval, relevance check, coverage assessment, generation — which catches comorbidity gaps that single-pass retrieval misses.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="evaluation">
+    <p class="section-label">Evaluation · System B</p>
+    <h2>Three-Dimension Assessment (n = 10 Cases)</h2>
+
+    <h3 style="margin-bottom:12px;">Retrieval &amp; Citation</h3>
+    <div class="eval-grid">
+      <div class="eval-item near">
+        <p class="eval-label">Retrieval Recall</p>
+        <div class="eval-row"><span class="eval-actual">80.9%</span><span class="eval-target">Target ≥ 85%</span></div>
+        <p class="eval-note">5/10 cases passed. Secondary comorbidity leaflets most commonly missed on first-pass retrieval.</p>
+      </div>
+      <div class="eval-item pass">
+        <p class="eval-label">Citation Accuracy</p>
+        <div class="eval-row"><span class="eval-actual">7 / 10</span><span class="eval-target">Human verified</span></div>
+        <p class="eval-note">70% of cases had fully traceable citations back to source leaflets.</p>
+      </div>
+    </div>
+
+    <h3 style="margin-top:24px;margin-bottom:12px;">Human Evaluation</h3>
+    <div class="eval-grid">
+      <div class="eval-item fail">
+        <p class="eval-label">Hallucination Rate</p>
+        <div class="eval-row"><span class="eval-actual">30%</span><span class="eval-target">Target &lt; 5%</span></div>
+        <p class="eval-note">3/10 cases. Root cause: medication templates from one diagnosis bleeding into unrelated sections.</p>
+      </div>
+      <div class="eval-item pass">
+        <p class="eval-label">Personalisation</p>
+        <div class="eval-row"><span class="eval-actual">4.2</span><span class="eval-target">Target ≥ 4.0</span></div>
+        <p class="eval-note">Content matched patient-specific diagnoses and medications.</p>
+      </div>
+      <div class="eval-item pass">
+        <p class="eval-label">Readability</p>
+        <div class="eval-row"><span class="eval-actual">4.7</span><span class="eval-target">Target ≥ 4.0</span></div>
+        <p class="eval-note">Highest-scoring dimension across all evaluated cases.</p>
+      </div>
+      <div class="eval-item pass">
+        <p class="eval-label">Clinical Utility</p>
+        <div class="eval-row"><span class="eval-actual">4.3</span><span class="eval-target">Target ≥ 4.0</span></div>
+        <p class="eval-note">Clinician reviewer found outputs practically usable at bedside.</p>
+      </div>
+    </div>
+    <div class="warn-box">
+      <p>Hallucination rate (30%) is the primary gap. Root cause: cross-diagnosis medication template bleeding. Remediation: per-claim source verification + section-level RAG-only constraints.</p>
+    </div>
+
+    <h3 style="margin-top:24px;margin-bottom:12px;">Conflict-Heavy Cases</h3>
+    <div class="card">
+      <p>Tested on comorbidity pairs with genuinely contradictory instructions — e.g. hypertension (sodium restriction) + hyponatraemia (sodium supplementation).</p>
+      <div class="table-wrap" style="margin-top:12px;">
+        <table>
+          <thead><tr><th>Conflict Pairs</th><th>Correctly Handled</th><th>Rate</th></tr></thead>
+          <tbody><tr><td>3 identified</td><td>2 / 3</td><td>67% — direction correct, automatic detection needs strengthening</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section id="future">
+    <p class="section-label">Future Work</p>
+    <h2>Next Directions</h2>
+    <ul class="future-list">
+      <li><strong>Hallucination mitigation (System B):</strong> Per-claim source verification and section-level grounding constraints to reach the &lt;5% clinical safety threshold.</li>
+      <li><strong>NIS integration (System B):</strong> Connect to nursing information system to incorporate fall-risk, pressure ulcer, and discharge readiness assessments into the patient profile.</li>
+      <li><strong>Voice interface (System A):</strong> Expand STT to full conversational interaction for elderly or low-literacy patients, beyond current single-query voice input.</li>
+      <li><strong>Knowledge gap feedback loop (both):</strong> Unresolved questions from both systems are collected as structured signals for knowledge base expansion — reviewed by clinical team before integration.</li>
+      <li><strong>Unified architecture:</strong> Merge the two systems so that a patient's discharge triggers a pre-generated personalised education set in System B, which becomes their default view in System A post-discharge.</li>
+    </ul>
+  </section>
+
+</div>
+
+<footer>
+  &copy; 2026 Chia-Yi (Julia) Chou &middot; Taipei Medical University &middot;
+  <a href="index.html" style="color:var(--accent-mid);">Back to Portfolio</a>
+</footer>
+</body>
+</html>
