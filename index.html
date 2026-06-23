@@ -3,268 +3,595 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Chia-Yi Chou | Medical Informatics Portfolio</title>
+  <title>Chia-Yi (Julia) Chou | Medical Informatics Portfolio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      line-height: 1.6;
-      color: #222;
-      background-color: #f7f7f7;
+    :root {
+      --bg: #f9f8f6;
+      --surface: #ffffff;
+      --border: #e4e1db;
+      --text-primary: #1a1917;
+      --text-secondary: #5c5853;
+      --accent: #1d4e6b;       /* deep teal — clinical, precise */
+      --accent-soft: #e8f1f6;
+      --accent-mid: #4a8aad;
+      --mono: 'IBM Plex Mono', monospace;
+      --sans: 'Inter', sans-serif;
     }
 
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--sans);
+      background: var(--bg);
+      color: var(--text-primary);
+      line-height: 1.65;
+      font-size: 15px;
+    }
+
+    /* ── HEADER ── */
     header {
-      background-color: #1f2937;
-      color: white;
-      padding: 60px 20px;
+      background: var(--accent);
+      color: #fff;
+      padding: 64px 24px 52px;
       text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    header::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+        90deg,
+        rgba(255,255,255,0.03) 0px,
+        rgba(255,255,255,0.03) 1px,
+        transparent 1px,
+        transparent 48px
+      );
+      pointer-events: none;
+    }
+
+    header .eyebrow {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.55);
+      margin-bottom: 14px;
     }
 
     header h1 {
+      font-size: clamp(28px, 5vw, 44px);
+      font-weight: 600;
+      letter-spacing: -0.02em;
       margin-bottom: 10px;
-      font-size: 36px;
     }
 
-    header p {
-      font-size: 18px;
-      margin: 5px 0;
+    header .subtitle {
+      font-size: 15px;
+      color: rgba(255,255,255,0.72);
+      max-width: 540px;
+      margin: 0 auto;
+      line-height: 1.5;
     }
 
+    /* ── NAV ── */
     nav {
-      background-color: white;
-      padding: 15px;
-      text-align: center;
-      border-bottom: 1px solid #ddd;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 0 24px;
+      display: flex;
+      justify-content: center;
+      gap: 0;
+      overflow-x: auto;
     }
 
     nav a {
-      margin: 0 12px;
-      color: #1f2937;
+      display: inline-block;
+      padding: 14px 16px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-secondary);
       text-decoration: none;
-      font-weight: bold;
+      border-bottom: 2px solid transparent;
+      white-space: nowrap;
+      transition: color 0.15s, border-color 0.15s;
     }
 
     nav a:hover {
-      color: #2563eb;
+      color: var(--accent);
+      border-bottom-color: var(--accent);
+    }
+
+    /* ── LAYOUT ── */
+    .container {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 0 24px;
     }
 
     section {
-      max-width: 900px;
-      margin: 30px auto;
-      background-color: white;
-      padding: 30px;
-      border-radius: 12px;
+      padding: 56px 0;
+      border-bottom: 1px solid var(--border);
     }
 
-    h2 {
-      color: #1f2937;
-      border-bottom: 2px solid #e5e7eb;
-      padding-bottom: 8px;
-    }
+    section:last-of-type { border-bottom: none; }
 
-    a {
-      color: #2563eb;
-    }
-
-    .project {
-      margin-bottom: 25px;
-      padding: 20px;
-      border: 1px solid #e5e7eb;
-      border-radius: 10px;
-      background-color: #fafafa;
-    }
-
-    .project h3 {
-      margin-bottom: 5px;
-      color: #374151;
-    }
-
-    .project ul {
-      margin-top: 10px;
-      padding-left: 22px;
-    }
-
-    .project li {
+    .section-label {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent-mid);
       margin-bottom: 8px;
     }
 
-    .project a {
-      color: #2563eb;
-      text-decoration: none;
+    h2 {
+      font-size: 22px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 24px;
+      letter-spacing: -0.01em;
     }
 
-    .project a:hover {
-      text-decoration: underline;
+    p { color: var(--text-secondary); margin-bottom: 12px; }
+
+    /* ── PROJECT CARDS ── */
+    .project {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 24px 28px;
+      margin-bottom: 18px;
     }
 
-    .tag {
-      display: inline-block;
-      background-color: #e5e7eb;
-      padding: 4px 8px;
-      border-radius: 6px;
-      margin: 3px;
+    .project-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+    }
+
+    .project h3 {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text-primary);
+      line-height: 1.4;
+    }
+
+    .badge {
+      font-family: var(--mono);
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      background: var(--accent-soft);
+      color: var(--accent);
+      border: 1px solid #c2d9e8;
+      padding: 3px 9px;
+      border-radius: 4px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .project-meta {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 14px;
+      margin-top: 16px;
+    }
+
+    .meta-block { }
+
+    .meta-label {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent-mid);
+      margin-bottom: 4px;
+    }
+
+    .meta-block p {
+      font-size: 13.5px;
+      margin: 0;
+      color: var(--text-secondary);
+    }
+
+    .stat {
+      font-family: var(--mono);
+      font-size: 18px;
+      font-weight: 500;
+      color: var(--accent);
+      display: block;
+      margin-bottom: 2px;
+    }
+
+    .stat-label {
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+
+    /* ── SKILLS ── */
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+    }
+
+    .skill-group {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 18px 20px;
+    }
+
+    .skill-group-label {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent-mid);
+      margin-bottom: 10px;
+    }
+
+    .skill-list {
+      list-style: none;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .skill-list li {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 5px;
+      padding: 3px 9px;
+      font-size: 12.5px;
+      color: var(--text-primary);
+    }
+
+    /* ── PRESENTATIONS ── */
+    .pres-item {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--accent);
+      border-radius: 0 8px 8px 0;
+      padding: 16px 20px;
+      margin-bottom: 12px;
+    }
+
+    .pres-item .conf {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--accent-mid);
+      margin-bottom: 4px;
+    }
+
+    .pres-item p {
       font-size: 14px;
+      margin: 0;
+      color: var(--text-primary);
     }
 
+    /* ── ABOUT ── */
+    .about-text {
+      font-size: 16px;
+      line-height: 1.75;
+      color: var(--text-secondary);
+      max-width: 680px;
+    }
+
+    /* ── CONTACT ── */
+    .contact-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .contact-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 16px;
+      text-decoration: none;
+      color: var(--text-primary);
+      font-size: 13.5px;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+
+    .contact-chip:hover {
+      border-color: var(--accent-mid);
+      box-shadow: 0 0 0 3px var(--accent-soft);
+    }
+
+    .contact-chip .icon {
+      width: 16px;
+      height: 16px;
+      opacity: 0.5;
+    }
+
+    /* ── FOOTER ── */
     footer {
       text-align: center;
-      padding: 25px;
-      color: #666;
+      padding: 32px 24px;
+      font-size: 12px;
+      color: var(--text-secondary);
+      border-top: 1px solid var(--border);
+    }
+
+    @media (max-width: 600px) {
+      header { padding: 48px 20px 40px; }
+      .project-meta { grid-template-columns: 1fr 1fr; }
     }
   </style>
 </head>
 
 <body>
-  <header>
-    <h1>Chia-Yi Chou</h1>
-    <p>Master's Student in Medical Informatics</p>
-    <p>Research Interests: Medical AI, Clinical NLP, RAG Systems, Pulmonary Function Analysis</p>
-  </header>
 
-  <nav>
-    <a href="#about">About</a>
-    <a href="#education">Education</a>
-    <a href="#research">Research</a>
-    <a href="#projects">Projects</a>
-    <a href="#presentations">Presentations</a>
-    <a href="#contact">Contact</a>
-  </nav>
+<header>
+  <p class="eyebrow">Biomedical Informatics · Medical AI · Clinical NLP</p>
+  <h1>Chia-Yi (Julia) Chou</h1>
+  <p class="subtitle">Master's student at Taipei Medical University bridging clinical practice and data science to build healthcare systems that actually work.</p>
+</header>
 
+<nav>
+  <a href="#about">About</a>
+  <a href="#education">Education</a>
+  <a href="#skills">Skills</a>
+  <a href="#projects">Projects</a>
+  <a href="#presentations">Presentations</a>
+  <a href="#contact">Contact</a>
+</nav>
+
+<div class="container">
+
+  <!-- ABOUT -->
   <section id="about">
-    <h2>About Me</h2>
-    <p>
-      I am a master's student in Medical Informatics with a background in nursing.
-      My work focuses on applying artificial intelligence and clinical data analysis
-      to healthcare problems, including pulmonary function testing, medical NLP,
-      and retrieval-augmented generation systems for patient education.
+    <p class="section-label">About</p>
+    <h2>Who I Am</h2>
+    <p class="about-text">
+      I'm a master's student in Biomedical Informatics with a background in nursing. My work sits at the intersection of clinical workflow design, machine learning, and NLP — building tools that physicians and nurses can actually use. I focus on pulmonary function analysis, retrieval-augmented generation for patient education, and clinical entity extraction from unstructured EHR data.
     </p>
   </section>
 
+  <!-- EDUCATION -->
   <section id="education">
-    <h2>Education</h2>
-    <p>
-      <strong>Master of Science in Medical Informatics</strong><br>
-      Taipei Medical University
-    </p>
-    <p>
-      Background in Nursing, with research interests in medical AI, clinical NLP,
-      pulmonary function analysis, and healthcare data science.
-    </p>
+    <p class="section-label">Education</p>
+    <h2>Academic Background</h2>
+    <div class="project" style="margin-bottom:0">
+      <div class="project-header">
+        <div>
+          <h3>M.S. Biomedical Informatics</h3>
+          <p style="margin-top:4px;font-size:14px;">Graduate Institute of Biomedical Informatics, Taipei Medical University</p>
+        </div>
+        <span class="badge">In Progress</span>
+      </div>
+    </div>
   </section>
 
-  <section id="research">
-    <h2>Research Interests</h2>
-    <p>
-      My research interests include medical artificial intelligence, clinical natural
-      language processing, pulmonary function interpretation, spirometry flow-volume
-      loop analysis, and AI-assisted patient education systems.
-    </p>
-
-    <span class="tag">Medical AI</span>
-    <span class="tag">Clinical NLP</span>
-    <span class="tag">RAG</span>
-    <span class="tag">Pulmonary Function Testing</span>
-    <span class="tag">Deep Learning</span>
-    <span class="tag">Healthcare Data Science</span>
+  <!-- SKILLS -->
+  <section id="skills">
+    <p class="section-label">Skills</p>
+    <h2>Technical Stack</h2>
+    <div class="skills-grid">
+      <div class="skill-group">
+        <p class="skill-group-label">Languages & Frameworks</p>
+        <ul class="skill-list">
+          <li>Python</li>
+          <li>R</li>
+          <li>MATLAB</li>
+          <li>SQL</li>
+          <li>JavaScript</li>
+        </ul>
+      </div>
+      <div class="skill-group">
+        <p class="skill-group-label">ML / Deep Learning</p>
+        <ul class="skill-list">
+          <li>PyTorch</li>
+          <li>scikit-learn</li>
+          <li>ResNet / CNN</li>
+          <li>Transfer Learning</li>
+          <li>Ensemble Methods</li>
+        </ul>
+      </div>
+      <div class="skill-group">
+        <p class="skill-group-label">NLP & LLM</p>
+        <ul class="skill-list">
+          <li>HuggingFace</li>
+          <li>LangChain</li>
+          <li>Ollama</li>
+          <li>RAG</li>
+          <li>PubMedBERT</li>
+          <li>BioLinkBERT</li>
+        </ul>
+      </div>
+      <div class="skill-group">
+        <p class="skill-group-label">Data & Clinical</p>
+        <ul class="skill-list">
+          <li>MIMIC-IV</li>
+          <li>EHR / EDC</li>
+          <li>Vector DBs</li>
+          <li>Spirometry Data</li>
+          <li>Phase III Trials</li>
+        </ul>
+      </div>
+    </div>
   </section>
 
+  <!-- PROJECTS -->
   <section id="projects">
-    <h2>Selected Projects</h2>
+    <p class="section-label">Research & Projects</p>
+    <h2>Selected Work</h2>
 
+    <!-- PRISm -->
+    <!-- PRISm + CNN combined card pointing to detail page -->
     <div class="project">
-      <h3>PRISm and Inspiratory Flow-Volume Loop Analysis</h3>
-      <p>
-        This project investigates preserved ratio impaired spirometry using pulmonary
-        function test data, with a focus on inspiratory flow-volume loop dynamics and
-        upper airway dysfunction-related features.
-      </p>
+      <div class="project-header">
+        <h3>ML-Based Inspiratory Flow–Volume Loop Analysis: UAO Detection & PRISm Phenotyping</h3>
+        <span class="badge">First Author · APSR</span>
+      </div>
+      <div class="project-meta">
+        <div class="meta-block">
+          <p class="meta-label">Study 1 — CNN</p>
+          <p>ResNet-18 on 154 spirometry loop images. Binary UAO vs non-UAO classification with Grad-CAM error analysis.</p>
+          <span class="stat" style="margin-top:8px;">AUC 0.807</span>
+          <span class="stat-label">Hold-out AUC · Macro F1 0.742</span>
+        </div>
+        <div class="meta-block">
+          <p class="meta-label">Study 2 — PRISm Phenotyping</p>
+          <p>7,187-patient cohort. Logistic regression + XGBoost + GMM clustering on inspiratory spirometric indices.</p>
+          <span class="stat" style="margin-top:8px;">OR 1.56</span>
+          <span class="stat-label">Stable PRISm → UAW proxy positivity (adj.)</span>
+        </div>
+        <div class="meta-block">
+          <p class="meta-label">Key Finding</p>
+          <p>Expiratory features alone cannot reconstruct inspiratory-limited physiology (AUC 0.557–0.568). GMM identified a distinct inspiratory-limited cluster (30.3%, n=443) enriched for Stable PRISm.</p>
+        </div>
+        <div class="meta-block">
+          <p class="meta-label">Dataset</p>
+          <p>TMUH spirometry database · 57,295 records · Dec 2007 – May 2026 · ResNet-18 / ResNet-50 / EfficientNet-B0 / DenseNet-121 compared</p>
+        </div>
+      </div>
+      <div style="margin-top:16px;">
+        <a href="project-spirometry-ml.html" style="font-size:13px; color:var(--accent); font-weight:500; text-decoration:none; border:1px solid #c2d9e8; background:var(--accent-soft); padding:6px 14px; border-radius:6px; display:inline-block;">View Full Project Details →</a>
+      </div>
     </div>
 
+    <!-- RAG Chatbot -->
     <div class="project">
-      <h3>Deep Learning Classification of Spirometry Flow-Volume Loop Morphology</h3>
-      <p>
-        This project applies a ResNet-18 convolutional neural network to classify
-        spirometry flow-volume loop morphology and explore AI-assisted interpretation
-        of pulmonary function testing.
-      </p>
+      <div class="project-header">
+        <h3>TMUH CareGuide AI: RAG-Based Patient Education Chatbot</h3>
+        <span class="badge">NLP & LLM Course</span>
+      </div>
+      <div class="project-meta">
+        <div class="meta-block">
+          <p class="meta-label">Problem</p>
+          <p>Generic health education materials fail to address individual patient needs, limiting comprehension and engagement.</p>
+        </div>
+        <div class="meta-block">
+          <p class="meta-label">Approach</p>
+          <p>Vector database built from 225 hospital education documents. Patient context retrieved from MIMIC-IV EHR data. Local LLM deployment via Ollama for data privacy compliance.</p>
+        </div>
+        <div class="meta-block">
+          <p class="meta-label">Evaluation</p>
+          <span class="stat">225</span>
+          <span class="stat-label">Documents indexed · Top-5 recommendations reviewed by clinical nurses</span>
+        </div>
+        <div class="meta-block">
+          <p class="meta-label">Impact</p>
+          <p>Planned deployment in hospital ward. Scales personalised education across departments with minimal added workload.</p>
+        </div>
+      </div>
     </div>
 
+    <!-- Biomedical NLP Kaggle -->
     <div class="project">
-      <h3>TMUH CareGuide AI: RAG-Based Patient Education Chatbot</h3>
-      <p>
-        This project implements a retrieval-augmented generation chatbot for patient
-        education using hospital-provided health education documents as the knowledge base.
-      </p>
+      <div class="project-header">
+        <h3>Biomedical Text Classification — Kaggle Competition</h3>
+        <span class="badge">NLP Competition</span>
+      </div>
+      <div class="project-meta">
+        <div class="meta-block">
+          <p class="meta-label">Problem</p>
+          <p>Classify 14,000+ medical condition descriptions into five disease categories from noisy, imbalanced labels.</p>
+        </div>
+        <div class="meta-block">
+          <p class="meta-label">Approach</p>
+          <p>Benchmarked TF-IDF baselines (NB, LR, SVM). Fine-tuned PubMedBERT and BioLinkBERT-large with 5-fold CV. Applied ensemble learning, overlap-aware post-processing, and uncertainty-based relabeling.</p>
+        </div>
+        <div class="meta-block">
+          <p class="meta-label">Key Result</p>
+          <span class="stat">0.71760</span>
+          <span class="stat-label">Public leaderboard score · 5-model BioLinkBERT-large ensemble</span>
+        </div>
+        <div class="meta-block">
+          <p class="meta-label">Stack</p>
+          <p>PubMedBERT · BioLinkBERT · TF-IDF · Ensemble Learning · HuggingFace</p>
+        </div>
+      </div>
     </div>
 
+    <!-- Pre-hospital Handover -->
     <div class="project">
-      <h3>Biomedical Text Classification — Kaggle Competition</h3>
-      <p>
-        Developed a biomedical NLP pipeline to classify medical condition descriptions
-        into five disease categories using traditional machine learning, biomedical
-        transformer models, and LLM-assisted labeling strategies.
-      </p>
-
-      <ul>
-        <li>
-          Processed 12,994 training samples and 1,444 testing samples, including
-          label encoding, class distribution analysis, token-length analysis, and
-          train-test overlap investigation.
-        </li>
-        <li>
-          Benchmarked TF-IDF-based models including Naïve Bayes, Logistic Regression,
-          SVM, Decision Tree, and KNN.
-        </li>
-        <li>
-          Fine-tuned PubMedBERT and BioLinkBERT-large for biomedical text classification
-          using 5-fold cross-validation.
-        </li>
-        <li>
-          Applied ensemble learning, overlap-aware post-processing, and uncertainty-based
-          relabeling to improve performance on noisy medical labels.
-        </li>
-        <li>
-          Achieved a best public leaderboard score of <strong>0.71760</strong> using a
-          five-model BioLinkBERT-large ensemble.
-        </li>
-      </ul>
-
-      <span class="tag">Biomedical NLP</span>
-      <span class="tag">PubMedBERT</span>
-      <span class="tag">BioLinkBERT</span>
-      <span class="tag">TF-IDF</span>
-      <span class="tag">Ensemble Learning</span>
-      <span class="tag">Kaggle</span>
+      <div class="project-header">
+        <h3>AI-Driven Pre-Hospital Handover Automation</h3>
+        <span class="badge">Data Mining Course</span>
+      </div>
+      <div class="project-meta">
+        <div class="meta-block">
+          <p class="meta-label">Problem</p>
+          <p>Clinical handovers from EMS to ED are prone to information loss and communication gaps, contributing to medical error.</p>
+        </div>
+        <div class="meta-block">
+          <p class="meta-label">Approach</p>
+          <p>Multimodal pipeline combining Speech-to-Text and NLP. Extracted structured clinical entities from unstructured handover narratives.</p>
+        </div>
+        <div class="meta-block">
+          <p class="meta-label">Result</p>
+          <p>Prototype validated on a test dataset for pipeline feasibility. Demonstrates end-to-end structuring of verbal handover data.</p>
+        </div>
+        <div class="meta-block">
+          <p class="meta-label">Impact</p>
+          <p>Reduces medical errors by improving EMS-to-ED data continuity in high-pressure handover environments.</p>
+        </div>
+      </div>
     </div>
   </section>
 
+  <!-- PRESENTATIONS -->
   <section id="presentations">
-    <h2>Presentations and Abstracts</h2>
-    <p>
-      <strong>APSR 2026</strong> – Original Research Abstracts in Respiratory Structure and Function.
-    </p>
-    <ul>
-      <li>
-        Heterogeneity of preserved ratio impaired spirometry: An inspiratory-limited
-        phenotype associated with upper airway dysfunction.
-      </li>
-      <li>
-        Deep learning classification of spirometry flow-volume loop morphology using
-        a ResNet-18 convolutional neural network.
-      </li>
-    </ul>
+    <p class="section-label">Presentations</p>
+    <h2>Abstracts & Conferences</h2>
+
+    <div class="pres-item">
+      <p class="conf">APSR 2026 — Original Research · Respiratory Structure and Function</p>
+      <p>Heterogeneity of preserved ratio impaired spirometry: An inspiratory-limited phenotype associated with upper airway dysfunction.</p>
+    </div>
+
+    <div class="pres-item">
+      <p class="conf">APSR 2026 — Original Research · Respiratory Structure and Function</p>
+      <p>Deep learning classification of spirometry flow-volume loop morphology using a ResNet-18 convolutional neural network.</p>
+    </div>
   </section>
 
+  <!-- CONTACT -->
   <section id="contact">
-    <h2>Contact</h2>
-    <p>Email: <a href="mailto:m610113002@tmu.edu.tw">m610113002@tmu.edu.tw</a></p>
-    <p>GitHub: <a href="https://github.com/juliachou0530" target="_blank">github.com/juliachou0530</a></p>
-    <p>Kaggle: <a href="https://www.kaggle.com/juliachoutmu" target="_blank">kaggle.com/juliachoutmu</a></p>
+    <p class="section-label">Contact</p>
+    <h2>Get in Touch</h2>
+    <div class="contact-grid">
+      <a class="contact-chip" href="mailto:m610113002@tmu.edu.tw">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 7 10-7"/></svg>
+        m610113002@tmu.edu.tw
+      </a>
+      <a class="contact-chip" href="https://github.com/juliachou0530" target="_blank">
+        <svg class="icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.021c0 4.428 2.865 8.185 6.839 9.51.5.092.682-.217.682-.483 0-.237-.009-.868-.013-1.703-2.782.605-3.369-1.342-3.369-1.342-.454-1.154-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.004.07 1.532 1.032 1.532 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.339-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.254-.446-1.273.098-2.654 0 0 .84-.27 2.75 1.025A9.578 9.578 0 0 1 12 6.836a9.59 9.59 0 0 1 2.504.337c1.909-1.295 2.747-1.025 2.747-1.025.546 1.381.202 2.4.1 2.654.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.944.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482C19.138 20.203 22 16.447 22 12.021 22 6.484 17.523 2 12 2z"/></svg>
+        github.com/juliachou0530
+      </a>
+      <a class="contact-chip" href="https://www.kaggle.com/juliachoutmu" target="_blank">
+        <svg class="icon" viewBox="0 0 24 24" fill="currentColor"><path d="M18.825 23.859c-.022.092-.117.141-.281.141h-3.139c-.187 0-.351-.082-.492-.248L10.988 18.4l-1.358 1.315v3.956c0 .218-.104.328-.313.328H6.985c-.21 0-.313-.11-.313-.328V.328C6.672.11 6.775 0 6.985 0h2.332c.21 0 .313.11.313.328v14.012l4.851-4.872c.164-.187.328-.28.492-.28h3.28c.149 0 .234.058.257.175.023.117-.016.211-.117.28l-5.062 4.757 5.414 8.849c.023.092.023.185 0 .31"/></svg>
+        kaggle.com/juliachoutmu
+      </a>
+    </div>
   </section>
 
-  <footer>
-    <p>© 2026 Chia-Yi Chou</p>
-  </footer>
+</div>
+
+<footer>
+  © 2026 Chia-Yi (Julia) Chou · Taipei Medical University
+</footer>
+
 </body>
 </html>
